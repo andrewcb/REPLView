@@ -712,6 +712,20 @@
                             <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HS1-Q0-zMY" customClass="REPLView" customModule="REPLView" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
+                                        <color key="value" red="0.18206778683629971" green="0.33102678571428573" blue="0.15207466592594071" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="outputColor">
+                                        <color key="value" red="0.75696306501116073" green="0.96835937500000002" blue="0.96659773908342639" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="errorColor">
+                                        <color key="value" red="0.96835937500000002" green="0.23813021578107565" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="echoColor">
+                                        <color key="value" red="0.0" green="0.47797424387769627" blue="0.61771763392857137" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </customView>
                         </subviews>
                     </view>
