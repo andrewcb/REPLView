@@ -9,9 +9,12 @@
 import Cocoa
 
 class ViewController: NSViewController {
+    
+    @IBOutlet var replView: REPLView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.replView.font = NSFont(name: "Monaco", size: 24.0)
 
         // Do any additional setup after loading the view.
     }
