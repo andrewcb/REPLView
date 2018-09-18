@@ -16,7 +16,7 @@ class ViewController: NSViewController {
         super.viewDidLoad()
         self.replView.font = NSFont(name: "Monaco", size: 24.0)
         self.replView.evaluator = { (line) in
-            guard let numeric = Int(line) else { return .error("Not a number: \(line)")}
+            guard let numeric = Int(line) else { return .error("Not a number: “\(line)”")}
             return .output(String(format:"0x%08x", numeric))
         }
 

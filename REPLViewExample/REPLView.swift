@@ -15,6 +15,8 @@ import Cocoa
 public class REPLView: NSView {
     
     // MARK: the REPL interface
+    
+    
     /// A possible response from the evaluator
     public enum EvalResponse {
         case output(String) // An output value to be printed
@@ -48,16 +50,15 @@ public class REPLView: NSView {
             self.layer?.backgroundColor = v.cgColor
             self.scrollView.backgroundColor = v
             self.scrollbackTextView.backgroundColor = v
-            self.inputField.backgroundColor = v
+            self.inputTextView.backgroundColor = v
         }
     }
     /** The colour for REPL non-error result output */
     @IBInspectable
     public var outputColor: NSColor = .darkGray {
         didSet {
-            self.inputField.textColor = self.outputColor
-//            (self.inputField.window?.fieldEditor(true, for: self.inputField) as? NSTextView)?.insertionPointColor = self.outputColor
-            //(self.inputField.currentEditor() as? NSTextView)?.insertionPointColor = self.outputColor
+            self.inputTextView.textColor = self.outputColor
+            self.inputTextView.insertionPointColor = self.outputColor
         }
     }
     /** The colour for REPL error output */
@@ -74,9 +75,7 @@ public class REPLView: NSView {
     @IBInspectable
     public var maxHistoryLines: Int = 20
     
-    class TextField: NSTextField {
-        
-        
+    class KeyInterceptingTextView: NSTextView {
         var submitText: ((String)->())?
         var handleSpecialKey: ((SpecialKey)->())?
         
@@ -87,22 +86,21 @@ public class REPLView: NSView {
         
         override func keyUp(with event: NSEvent) {
             if event.keyCode == 36 /* Enter */ && event.modifierFlags.intersection(.deviceIndependentFlagsMask).isEmpty {
-                self.submitText?(self.stringValue)
-                self.stringValue = ""
+                self.submitText?(self.string.trimmingCharacters(in: CharacterSet(charactersIn: "\n")))
+                self.string = ""
             } else if let specialKey = SpecialKey(rawValue: event.keyCode) {
                 self.handleSpecialKey?(specialKey)
             } else {
                 super.keyUp(with: event)
             }
         }
-        
     }
     
     var scrollView: NSScrollView = NSScrollView()
     var scrollbackTextView: NSTextView = NSTextView()
-    var inputField: TextField = TextField()
+    var inputTextView: KeyInterceptingTextView = KeyInterceptingTextView()
     
-    // history handling
+    //MARK: history handling
     var history: [String] = []
     var currentlyEditedLine: String? = nil // the line being entered at the moment, which the user can return to
     // where the user is currently in navigating the history (or not)
@@ -113,11 +111,12 @@ public class REPLView: NSView {
     var historyNavigationState = HistoryNavigationState.currentLine {
         didSet(prev) {
             guard self.historyNavigationState != prev else { return }
-            if prev == .currentLine { self.currentlyEditedLine = self.inputField.stringValue }
+            if prev == .currentLine { self.currentlyEditedLine = self.inputTextView.string }
             switch(self.historyNavigationState) {
-            case .currentLine: self.inputField.stringValue = self.currentlyEditedLine ?? ""
-            case .historyItem(let index): self.inputField.stringValue = self.history[index]
+            case .currentLine: self.inputTextView.string = self.currentlyEditedLine ?? ""
+            case .historyItem(let index): self.inputTextView.string = self.history[index]
             }
+            self.needsLayout = true
         }
     }
     func addToHistory(line: String) {
@@ -136,7 +135,7 @@ public class REPLView: NSView {
         }
         set(v) {
             self.scrollbackTextView.font = v
-            self.inputField.font = v
+            self.inputTextView.font = v
         }
     }
     
@@ -175,16 +174,12 @@ public class REPLView: NSView {
         self.scrollView.borderType = .noBorder
         self.scrollView.hasVerticalScroller = true
         self.scrollView.autohidesScrollers = true
-        self.addSubview(self.inputField)
-        self.inputField.placeholderString = " "
-        self.inputField.preferredMaxLayoutWidth = self.frame.width
-        self.inputField.delegate = self
-        self.inputField.maximumNumberOfLines = 0
-        self.inputField.submitText = self.submitText
-        self.inputField.isBezeled = true
-        self.inputField.bezelStyle = .squareBezel
+        self.addSubview(self.inputTextView)
+        self.inputTextView.string = ""
+        self.inputTextView.delegate = self
         
-        self.inputField.handleSpecialKey = self.handleInputSpecialKey
+        self.inputTextView.submitText = self.submitText
+        self.inputTextView.handleSpecialKey = self.handleInputSpecialKey
         
         self.scrollbackTextView.isEditable = false
         
@@ -192,23 +187,22 @@ public class REPLView: NSView {
         
         self.scrollbackTextView.wantsLayer = true
         self.scrollbackTextView.layer?.backgroundColor = NSColor.green.cgColor
-        self.inputField.wantsLayer = true
-        self.inputField.layer?.backgroundColor = NSColor.yellow.cgColor
+        self.inputTextView.wantsLayer = true
+        self.inputTextView.layer?.backgroundColor = NSColor.yellow.cgColor
         
     }
     
     override public func layout() {
         super.layout()
-        self.inputField.stringValue = self.inputField.stringValue
-        let inputTextSize = self.inputField.sizeThatFits(self.frame.size)
-        self.inputField.preferredMaxLayoutWidth = self.frame.width
-        self.inputField.frame = NSRect(x: -1.0, y: -1.0, width: self.frame.width+2.0, height: max(inputTextSize.height, 24.0))
-        
+        guard let inLayoutManager = inputTextView.layoutManager, let inTextCtr = inputTextView.textContainer else { fatalError(":-P")}
+        inLayoutManager.ensureLayout(for: inTextCtr)
+        let inTextSize = inLayoutManager.usedRect(for: inTextCtr)
+        self.inputTextView.frame = NSRect(x: 0, y: 0, width: self.frame.width, height: inTextSize.height)
         
         if let layoutManager = self.scrollbackTextView.layoutManager, let textContainer = self.scrollbackTextView.textContainer {
             layoutManager.ensureLayout(for: textContainer)
             let textSize = layoutManager.usedRect(for: textContainer)
-            self.scrollView.frame = NSRect(x: 0.0, y: self.inputField.frame.height, width: self.frame.width, height: min(self.frame.height - self.inputField.frame.height, textSize.height))
+            self.scrollView.frame = NSRect(x: 0.0, y: self.inputTextView.frame.height, width: self.frame.width, height: min(self.frame.height - self.inputTextView.frame.height, textSize.height))
             self.scrollbackTextView.frame = NSRect(x: 0.0, y: 0.0, width: self.scrollView.frame.width, height: textSize.height)
         }
     }
@@ -225,7 +219,7 @@ public class REPLView: NSView {
 
     }
     
-    func handleInputSpecialKey(_ key: TextField.SpecialKey) {
+    func handleInputSpecialKey(_ key: KeyInterceptingTextView.SpecialKey) {
         switch(key) {
         case .up:
             if !self.history.isEmpty {
@@ -246,8 +240,8 @@ public class REPLView: NSView {
     }
 }
 
-extension REPLView: NSTextFieldDelegate {
-    override public func controlTextDidChange(_ obj: Notification) {
+extension REPLView: NSTextViewDelegate {
+    public func textDidChange(_ obj: Notification) {
         self.needsLayout = true
     }
 }
