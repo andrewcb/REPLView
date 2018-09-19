@@ -191,7 +191,6 @@ public class REPLView: NSView {
         self.inputTextView.isAutomaticTextReplacementEnabled = false
         self.inputTextView.isAutomaticSpellingCorrectionEnabled = false
         self.scrollbackTextView.isEditable = false
-        self.scrollbackTextView.nextResponder = self.inputTextView
         
         let clickRecognizer = NSClickGestureRecognizer(target: self, action: #selector(self.scrollbackClicked(_:)))
         self.addGestureRecognizer(clickRecognizer)
