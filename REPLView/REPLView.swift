@@ -191,6 +191,11 @@ public class REPLView: NSView {
         self.inputTextView.isAutomaticTextReplacementEnabled = false
         self.inputTextView.isAutomaticSpellingCorrectionEnabled = false
         self.scrollbackTextView.isEditable = false
+        self.scrollbackTextView.nextResponder = self.inputTextView
+        
+        let clickRecognizer = NSClickGestureRecognizer(target: self, action: #selector(self.scrollbackClicked(_:)))
+        self.addGestureRecognizer(clickRecognizer)
+        
         
         self.backgroundColor = self.scrollView.backgroundColor
         self.needsLayout = true
@@ -212,6 +217,11 @@ public class REPLView: NSView {
             self.scrollView.frame = NSRect(x: 0.0, y: self.inputTextView.frame.height, width: self.frame.width, height: min(self.frame.height - self.inputTextView.frame.height, textSize.height))
             self.scrollbackTextView.frame = NSRect(x: 0.0, y: 0.0, width: self.scrollView.frame.width, height: ceil(textSize.height))
         }
+    }
+    
+    @objc func scrollbackClicked(_ sender: Any) {
+        self.scrollbackTextView.setSelectedRange(NSMakeRange(0, 0))
+        self.window?.makeFirstResponder(self.inputTextView)
     }
     
     func submitText( _ line: String) {
