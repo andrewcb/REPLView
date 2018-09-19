@@ -32,6 +32,10 @@ myRepl.printOutputLn("Hello world")
 
 To print an error message, use the `printErrorLn(:)` method in the same way. (Alternatively, you can use the `println(response:)` method, passing a `REPLView.EvalResponse` value, if that is more convenient.)
 
+## Example code
+
+The provided `REPLViewExample` project builds a basic example application, which reads integers on the REPL's input and prints their hexadecimal representations (or error messages if non-integer inputs are given). This demonstrates the basic operation of `REPLView`. Note that in this example, the REPL's colour scheme is defined in the Storyboard.
+
 ## Compatibility
 
 REPLView is written in Swift 4. Due to its use of Swift's type system, it probably won't ever be compatible with Objective C, but if you're writing new code in Objective C, you should probably ask yourself why.
@@ -39,3 +43,7 @@ REPLView is written in Swift 4. Due to its use of Swift's type system, it probab
 ## Authors
 
  * **Andrew Bulhak** - [GitHub](https://github.com/andrewcb/)/[Technical blog](http://tech.null.org/)
+
+## License
+
+`REPLView` is licensed under the MIT License.
