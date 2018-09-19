@@ -94,6 +94,10 @@ public class REPLView: NSView {
                 super.keyUp(with: event)
             }
         }
+        
+        override func menu(for event: NSEvent) -> NSMenu? {
+            return nil
+        }
     }
     
     var scrollView: NSScrollView = NSScrollView()
@@ -177,10 +181,15 @@ public class REPLView: NSView {
         self.addSubview(self.inputTextView)
         self.inputTextView.string = ""
         self.inputTextView.delegate = self
-        
         self.inputTextView.submitText = self.submitText
         self.inputTextView.handleSpecialKey = self.handleInputSpecialKey
-        
+        self.inputTextView.isAutomaticQuoteSubstitutionEnabled = false
+        self.inputTextView.isGrammarCheckingEnabled = false
+        self.inputTextView.isAutomaticDashSubstitutionEnabled = false
+        self.inputTextView.isAutomaticTextCompletionEnabled = false
+        self.inputTextView.isAutomaticDataDetectionEnabled = false
+        self.inputTextView.isAutomaticTextReplacementEnabled = false
+        self.inputTextView.isAutomaticSpellingCorrectionEnabled = false
         self.scrollbackTextView.isEditable = false
         
         self.needsLayout = true
