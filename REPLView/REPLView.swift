@@ -192,13 +192,8 @@ public class REPLView: NSView {
         self.inputTextView.isAutomaticSpellingCorrectionEnabled = false
         self.scrollbackTextView.isEditable = false
         
+        self.backgroundColor = self.scrollView.backgroundColor
         self.needsLayout = true
-        
-        self.scrollbackTextView.wantsLayer = true
-        self.scrollbackTextView.layer?.backgroundColor = NSColor.green.cgColor
-        self.inputTextView.wantsLayer = true
-        self.inputTextView.layer?.backgroundColor = NSColor.yellow.cgColor
-        
     }
     
     override public func layout() {
