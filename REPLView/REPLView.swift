@@ -194,16 +194,19 @@ public class REPLView: NSView {
     
     override public func layout() {
         super.layout()
+        // prime widths of text elements to ensure correct line breaking
+        self.inputTextView.frame.size = CGSize(width: self.frame.size.width, height: 50.0)
+        self.scrollbackTextView.frame.size = CGSize(width: self.frame.size.width, height: 50.0)
         guard let inLayoutManager = inputTextView.layoutManager, let inTextCtr = inputTextView.textContainer else { fatalError(":-P")}
         inLayoutManager.ensureLayout(for: inTextCtr)
         let inTextSize = inLayoutManager.usedRect(for: inTextCtr)
-        self.inputTextView.frame = NSRect(x: 0, y: 0, width: self.frame.width, height: inTextSize.height)
+        self.inputTextView.frame = NSRect(x: 0, y: 0, width: self.frame.width, height: ceil(inTextSize.height))
         
         if let layoutManager = self.scrollbackTextView.layoutManager, let textContainer = self.scrollbackTextView.textContainer {
             layoutManager.ensureLayout(for: textContainer)
             let textSize = layoutManager.usedRect(for: textContainer)
             self.scrollView.frame = NSRect(x: 0.0, y: self.inputTextView.frame.height, width: self.frame.width, height: min(self.frame.height - self.inputTextView.frame.height, textSize.height))
-            self.scrollbackTextView.frame = NSRect(x: 0.0, y: 0.0, width: self.scrollView.frame.width, height: textSize.height)
+            self.scrollbackTextView.frame = NSRect(x: 0.0, y: 0.0, width: self.scrollView.frame.width, height: ceil(textSize.height))
         }
     }
     

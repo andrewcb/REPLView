@@ -12,7 +12,7 @@
 		4485F329214F2BE70003BB3B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4485F328214F2BE70003BB3B /* Assets.xcassets */; };
 		4485F32C214F2BE70003BB3B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4485F32A214F2BE70003BB3B /* Main.storyboard */; };
 		4485F338214F2BE70003BB3B /* REPLViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4485F337214F2BE70003BB3B /* REPLViewTests.swift */; };
-		4485F343214F2BF80003BB3B /* REPLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4485F342214F2BF80003BB3B /* REPLView.swift */; };
+		4485F3472151C2C40003BB3B /* REPLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4485F3462151C2C40003BB3B /* REPLView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,8 +35,8 @@
 		4485F333214F2BE70003BB3B /* REPLViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = REPLViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4485F337214F2BE70003BB3B /* REPLViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = REPLViewTests.swift; sourceTree = "<group>"; };
 		4485F339214F2BE70003BB3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4485F342214F2BF80003BB3B /* REPLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = REPLView.swift; sourceTree = "<group>"; };
 		4485F3442151501D0003BB3B /* REPLViewExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = REPLViewExample.entitlements; sourceTree = "<group>"; };
+		4485F3462151C2C40003BB3B /* REPLView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = REPLView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,13 +78,13 @@
 		4485F323214F2BE50003BB3B /* REPLViewExample */ = {
 			isa = PBXGroup;
 			children = (
+				4485F3452151C2C40003BB3B /* REPLView */,
 				4485F324214F2BE50003BB3B /* AppDelegate.swift */,
 				4485F326214F2BE50003BB3B /* ViewController.swift */,
 				4485F328214F2BE70003BB3B /* Assets.xcassets */,
 				4485F32A214F2BE70003BB3B /* Main.storyboard */,
 				4485F32D214F2BE70003BB3B /* Info.plist */,
 				4485F3442151501D0003BB3B /* REPLViewExample.entitlements */,
-				4485F342214F2BF80003BB3B /* REPLView.swift */,
 			);
 			path = REPLViewExample;
 			sourceTree = "<group>";
@@ -97,6 +97,14 @@
 			);
 			path = REPLViewExampleTests;
 			sourceTree = "<group>";
+		};
+		4485F3452151C2C40003BB3B /* REPLView */ = {
+			isa = PBXGroup;
+			children = (
+				4485F3462151C2C40003BB3B /* REPLView.swift */,
+			);
+			path = REPLView;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -200,7 +208,7 @@
 			files = (
 				4485F327214F2BE50003BB3B /* ViewController.swift in Sources */,
 				4485F325214F2BE50003BB3B /* AppDelegate.swift in Sources */,
-				4485F343214F2BF80003BB3B /* REPLView.swift in Sources */,
+				4485F3472151C2C40003BB3B /* REPLView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
