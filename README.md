@@ -2,6 +2,9 @@
 
 A Cocoa interface element which implements the interface for a Read-Eval-Print Loop (REPL).
 
+![Animated screenshot of the example application](https://user-images.githubusercontent.com/414905/45753990-4f42a100-bc12-11e8-943f-cd0cbcb02d6e.gif)
+
+
 ## Overview
 
 *REPLView* is a Cocoa View for macOS which presents a scrolling text window with an editable input line at the bottom. The user can type text into the input line; when they press Enter, the text is passed to a provided *evaluator* function, which executes, evaluates or otherwise processes it, potentially producing output and/or error messages, which are then appended to the scrolling text window.

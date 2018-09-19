@@ -19,7 +19,7 @@ class ViewController: NSViewController {
             guard let numeric = Int(line) else { return .error("Not a number: “\(line)”")}
             return .output(String(format:"0x%08x", numeric))
         }
-        self.replView.printOutputLn("Welcome! Enter a number in decimal to see its  hexadecimal representation.")
+        self.replView.printOutputLn("Welcome! Enter a number in decimal to see its hexadecimal representation.")
 
         // Do any additional setup after loading the view.
     }
