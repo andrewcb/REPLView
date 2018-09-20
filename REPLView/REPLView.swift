@@ -153,19 +153,24 @@ public class REPLView: NSView {
         self.configureSubviews()
     }
     
-    private func emit(line: String, withColor color: NSColor) {
+    private var scrollbackIsAtBottom: Bool {
         let visibleRect = self.scrollView.documentVisibleRect
         let docHeight = self.scrollView.documentView!.frame.size.height
         let distanceFromBottom = docHeight - (visibleRect.origin.y+visibleRect.size.height)
-        
+        return distanceFromBottom < self.font?.boundingRectForFont.height ?? 1.0
+    }
+    
+    private func emit(line: String, withColor color: NSColor) {
+        let wasAtBottom = self.scrollbackIsAtBottom
+
         guard let textStorage = self.scrollbackTextView.textStorage else { fatalError("No text storage?!") }
         if !self.scrollbackTextView.string.isEmpty {
             textStorage.append(NSAttributedString(string: "\n"))
         }
-        let attStr = NSMutableAttributedString(string: line, attributes: [NSAttributedStringKey.foregroundColor : color,
-             NSAttributedStringKey.font: self.font ?? NSFont.systemFont(ofSize: NSFont.systemFontSize)])
+        let attStr = NSMutableAttributedString(string: line, attributes: [.foregroundColor : color,
+             .font: self.font ?? NSFont.systemFont(ofSize: NSFont.systemFontSize)])
         textStorage.append(attStr)
-        if distanceFromBottom < 1.0 {
+        if wasAtBottom {
             self.scrollView.documentView?.scrollToEndOfDocument(nil)
         }
         self.needsLayout = true
@@ -201,6 +206,7 @@ public class REPLView: NSView {
     }
     
     override public func layout() {
+        let wasAtBottom = self.scrollbackIsAtBottom
         super.layout()
         // prime widths of text elements to ensure correct line breaking
         self.inputTextView.frame.size = CGSize(width: self.frame.size.width, height: 50.0)
@@ -215,6 +221,9 @@ public class REPLView: NSView {
             let textSize = layoutManager.usedRect(for: textContainer)
             self.scrollView.frame = NSRect(x: 0.0, y: self.inputTextView.frame.height, width: self.frame.width, height: min(self.frame.height - self.inputTextView.frame.height, textSize.height))
             self.scrollbackTextView.frame = NSRect(x: 0.0, y: 0.0, width: self.scrollView.frame.width, height: ceil(textSize.height))
+            if wasAtBottom {
+                self.scrollView.documentView?.scrollToEndOfDocument(nil)
+            }
         }
     }
     
