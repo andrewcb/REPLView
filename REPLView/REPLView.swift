@@ -84,14 +84,14 @@ public class REPLView: NSView {
             case down = 125
         }
         
-        override func keyUp(with event: NSEvent) {
+        override func keyDown(with event: NSEvent) {
             if event.keyCode == 36 /* Enter */ && event.modifierFlags.intersection(.deviceIndependentFlagsMask).isEmpty {
                 self.submitText?(self.string.trimmingCharacters(in: CharacterSet(charactersIn: "\n")))
                 self.string = ""
             } else if let specialKey = SpecialKey(rawValue: event.keyCode) {
                 self.handleSpecialKey?(specialKey)
             } else {
-                super.keyUp(with: event)
+                super.keyDown(with: event)
             }
         }
         
@@ -195,6 +195,7 @@ public class REPLView: NSView {
         self.inputTextView.isAutomaticDataDetectionEnabled = false
         self.inputTextView.isAutomaticTextReplacementEnabled = false
         self.inputTextView.isAutomaticSpellingCorrectionEnabled = false
+        self.inputTextView.isRichText = false
         self.scrollbackTextView.isEditable = false
         
         let clickRecognizer = NSClickGestureRecognizer(target: self, action: #selector(self.scrollbackClicked(_:)))
@@ -209,8 +210,12 @@ public class REPLView: NSView {
         let wasAtBottom = self.scrollbackIsAtBottom
         super.layout()
         // prime widths of text elements to ensure correct line breaking
-        self.inputTextView.frame.size = CGSize(width: self.frame.size.width, height: 50.0)
-        self.scrollbackTextView.frame.size = CGSize(width: self.frame.size.width, height: 50.0)
+        if self.inputTextView.frame.size.width != self.frame.size.width {
+            self.inputTextView.frame.size = CGSize(width: self.frame.size.width, height: self.inputTextView.frame.size.height)
+        }
+        if self.scrollbackTextView.frame.size.width != self.frame.size.width {
+            self.scrollbackTextView.frame.size = CGSize(width: self.frame.size.width, height: self.scrollbackTextView.frame.size.height)
+        }
         guard let inLayoutManager = inputTextView.layoutManager, let inTextCtr = inputTextView.textContainer else { fatalError(":-P")}
         inLayoutManager.ensureLayout(for: inTextCtr)
         let inTextSize = inLayoutManager.usedRect(for: inTextCtr)
@@ -219,8 +224,15 @@ public class REPLView: NSView {
         if let layoutManager = self.scrollbackTextView.layoutManager, let textContainer = self.scrollbackTextView.textContainer {
             layoutManager.ensureLayout(for: textContainer)
             let textSize = layoutManager.usedRect(for: textContainer)
-            self.scrollView.frame = NSRect(x: 0.0, y: self.inputTextView.frame.height, width: self.frame.width, height: min(self.frame.height - self.inputTextView.frame.height, textSize.height))
-            self.scrollbackTextView.frame = NSRect(x: 0.0, y: 0.0, width: self.scrollView.frame.width, height: ceil(textSize.height))
+            let textHeight = textSize.height
+            self.scrollView.frame = NSRect(
+                x: 0.0,
+                y: self.inputTextView.frame.height,
+                width: self.frame.width,
+                height: min(
+                    self.frame.height - self.inputTextView.frame.height,
+                    textHeight))
+            self.scrollbackTextView.frame = NSRect(x: 0.0, y: 0.0, width: self.scrollView.frame.width, height: ceil(textHeight))
             if wasAtBottom {
                 self.scrollView.documentView?.scrollToEndOfDocument(nil)
             }
