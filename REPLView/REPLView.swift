@@ -53,6 +53,12 @@ public class REPLView: NSView {
             self.inputTextView.backgroundColor = v
         }
     }
+    /** An optional background colour for the text input area; if not provided, the background color will be used */
+    public var inputBackgroundColor: NSColor? {
+        didSet {
+            self.inputTextView.backgroundColor = self.inputBackgroundColor ?? self.backgroundColor
+        }
+    }
     /** The colour for REPL non-error result output */
     @IBInspectable
     public var outputColor: NSColor = .darkGray {

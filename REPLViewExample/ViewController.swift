@@ -15,6 +15,8 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.replView.font = NSFont(name: "Monaco", size: 24.0)
+        // darken the input area slightly as a hint
+        self.replView.inputBackgroundColor = self.replView.backgroundColor.blended(withFraction: 0.02, of: NSColor.black)
         self.replView.evaluator = { (line) in
             guard let numeric = Int(line) else { return .error("Not a number: “\(line)”")}
             return .output(String(format:"0x%08x", numeric))
