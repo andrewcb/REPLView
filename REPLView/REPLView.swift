@@ -192,8 +192,8 @@ public class REPLView: NSView {
         self.addSubview(self.inputTextView)
         self.inputTextView.string = ""
         self.inputTextView.delegate = self
-        self.inputTextView.submitText = self.submitText
-        self.inputTextView.handleSpecialKey = self.handleInputSpecialKey
+        self.inputTextView.submitText = { [weak self] (line) in self?.submitText(line) }
+        self.inputTextView.handleSpecialKey = { [weak self] (key) in self?.handleInputSpecialKey(key) }
         self.inputTextView.isAutomaticQuoteSubstitutionEnabled = false
         self.inputTextView.isGrammarCheckingEnabled = false
         self.inputTextView.isAutomaticDashSubstitutionEnabled = false
