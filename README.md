@@ -11,7 +11,7 @@ A Cocoa interface element which implements the interface for a Read-Eval-Print L
 
 *REPLView* has the following features:
 
-* Colour-coded output, with distinct colours for output, errors and echoed user input
+* Colour-coded output, with distinct colours for output, errors, echoed user input and previous sessions' restored output
 * User input echoing may be configured with customisable formatting or disabled altogether
 * Multi-line input history, which can be navigated with the up/down arrow keys
 * Output may be *synchronous* (returned by the evaluator function) and/or *asynchronous* (written to the REPL window at any time)

@@ -38,6 +38,14 @@ public class REPLView: NSView {
     public func printOutputLn(_ line: String) { self.println(response: .output(line)) }
     /** Print an error string asynchronously. */
     public func printErrorLn(_ line: String) { self.println(response: .error(line)) }
+    /** insert the previous sessions' output into the scrollback window */
+    public func outputRestoredScrollback(_ text: String) {
+        self.scrollbackTextView.textStorage?.setAttributedString(NSAttributedString())
+        self.emit(line: text, withColor: self.restoredScrollbackColor)
+        if let delim = self.restoredScrollbackDelimiter {
+            self.emit(line: delim, withColor: self.restoredScrollbackColor)
+        }
+    }
 
     // MARK: UI configuration
     
@@ -73,6 +81,13 @@ public class REPLView: NSView {
     /** The colour for echoes of the user's input, if enabled */
     @IBInspectable
     public var echoColor: NSColor = .lightGray
+    
+    /** if previous sessions' scrollback is saved as an unattributed string, discarding attributes, this is the colour to restore it with */
+    @IBInspectable
+    public var restoredScrollbackColor: NSColor = .darkGray
+    
+    /** text to append to the scrollback immediately after restored text  */
+    public var restoredScrollbackDelimiter: String?
 
     /** A function for formatting a typed line to an echo */
     public var echoFormatter: ((String)->(String))? = { ">>> \($0)" }
